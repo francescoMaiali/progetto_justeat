@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="button">POLPO</string>
+    <string name="ciao">PAUL</string>
+    <string name="tutto">buono</string>
+    <string name="ook">inpadella</string>
+    <string name="nono">0</string>
+    <string name="login">LOGIN</string>
+    <string name="registrati">REGISTRATI</string>
+    <string name="login_error">Login error</string>
+    <string name="login_success">login avvenuto</string>
+    <string name="password_error">Password errata</string>
+    <string name="email_error">email errata</string>
+    <string name="email">e-mail</string>
+    <string name="password">password</string>
+    <string name="phone_number">numero di telefono</string>
+</resources>
