@@ -1,6 +1,7 @@
 package com.example.franc.myapplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
     Button loginBtn;
     Button registerBtn;
+
 
 
     @Override
@@ -99,7 +101,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             showSuccesMessage();
 
         } else if (view.getId() == R.id.register_btn) {
-
+            Intent intent = new Intent(this,RegisterActivity.class);
+            startActivity(intent);
         }
     }
 }
