@@ -30,8 +30,6 @@ public class RegisterActivity extends AppCompatActivity implements OnClickListen
 
 
 
-
-
         Log.i(TAG, "activity created");
     }
     private boolean isValidPassword() {
