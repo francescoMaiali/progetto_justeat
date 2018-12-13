@@ -1,63 +1,135 @@
 package com.example.franc.myapplication;
 
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.util.Patterns;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-public class RegisterActivity extends AppCompatActivity implements OnClickListener {
-    private static final int PASSWORD_LENGHT = 6;
-    private static final String TAG = "RegisterActivity" ;
-    EditText passwordRegister;
-    EditText emailRegister;
-    EditText phoneRegister;
-    private static final int PHONE_LENGHT = 10;
+public class RegisterActivity extends AppCompatActivity {
 
-    Button RegistratiButton;
+    EditText emailEt;
+    EditText passwordEt;
+    EditText phoneNumberEt;
+
+    Button registerBtn;
+
+    boolean emailValidated, passwordValidated, phoneValidated;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Connect activity class to layout
+
         setContentView(R.layout.activity_register);
+        emailEt = findViewById(R.id.email_et);
+        passwordEt = findViewById(R.id.password_et);
+        phoneNumberEt = findViewById(R.id.phone_et);
+        registerBtn = findViewById(R.id.register_btn);
+
+        emailEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                emailValidated = isValidEmail(editable.toString());
+                enableButton();
 
 
 
-        Log.i(TAG, "activity created");
+            }
+        });
+
+        phoneNumberEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                phoneValidated = isValidPhone(editable.toString());
+                enableButton();
+            }
+        });
+
+
+        passwordEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                passwordValidated = isValidPassword(editable.toString());
+                enableButton();
+            }
+        });
+
+
+        registerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO do something
+
+                String email = emailEt.getText().toString();
+                String password = passwordEt.getText().toString();
+                String phoneNumber = phoneNumberEt.getText().toString();
+
+                createAccount(email, password, phoneNumber);
+
+            }
+        });
+
     }
-    private boolean isValidPassword() {
-        String password = passwordRegister.getText().toString();
-        return (password.length() > PASSWORD_LENGHT);
-    }
-    private boolean isValidEmail() {
-        return Patterns.EMAIL_ADDRESS.matcher(emailRegister.getText()).matches();
 
-    }
-    private boolean isValidPhoneNumber() {
-        String phoneNumber = phoneRegister.getText().toString();
-        return (phoneNumber.length() == PHONE_LENGHT);
-
+    private boolean isValidPassword(String string) {
+        return (string.length() > 6);
     }
 
-    private void showSuccesMessage() {
-        Context context = getApplicationContext();
-        CharSequence text = "login successfull";
-        int duration = Toast.LENGTH_SHORT;
-
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
-        Log.i(TAG, getString(R.string.login_success));
+    private boolean isValidPhone(String string) {
+        return (string.length() == 10);
     }
 
-    @Override
-    public void onClick(View view) {
+
+    private void createAccount(String email, String password, String phoneNumber) {
+
+        // TODO cose
+    }
+
+
+    private boolean isValidEmail(String email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
 
     }
+
+
+    private void enableButton() {
+        registerBtn.setEnabled((emailValidated && passwordValidated && phoneValidated));
+    }
+
+
 }

@@ -1,40 +1,32 @@
 package com.example.franc.myapplication;
 
-import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-public class MainActivity extends AppCompatActivity implements OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "MainActivity";
-    private static final int PASSWORD_LENGHT = 6;
-
+    private static final int PASSWORD_LENGTH = 6;
 
     EditText emailET;
     EditText passwordET;
 
     Button loginBtn;
     Button registerBtn;
-
-
+    public static final String WELCOME ="WELCOME";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
 
-        final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[A-Z]).{6,}$";
+
+        setContentView(R.layout.activity_main);
 
         emailET = findViewById(R.id.email_et);
         passwordET = findViewById(R.id.password_et);
@@ -48,61 +40,87 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
         loginBtn.setOnClickListener(this);
 
+        registerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this,
+                        RegisterActivity.class);
+                startActivity(i);
+            }
+        });
+
         Log.i(TAG, "activity created");
-    }
-
-    private boolean isValidEmail() {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(emailET.getText()).matches();
-    }
-
-
-    private void showErroMessage(String message) {
-
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-
-        Log.e(TAG, message);
-
 
     }
 
-    /**
-     * @return
-     */
-    private boolean isValidPassword() {
+
+
+    private boolean isValidEmail(){
+        String email = emailET.getText().toString();
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+
+    }
+
+
+    private boolean isValidPassword(){
         String password = passwordET.getText().toString();
-        return (password.length() > PASSWORD_LENGHT);
+        return (password.length() > PASSWORD_LENGTH);
     }
 
-    private void showSuccesMessage() {
-        Context context = getApplicationContext();
-        CharSequence text = "login successfull";
-        int duration = Toast.LENGTH_SHORT;
 
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
-        Log.i(TAG, getString(R.string.login_success));
+    private void showErrorMessage(String message){
+
+        Toast.makeText(this,message,Toast.LENGTH_LONG).show();
+
+        Log.e(TAG,message);
     }
+
+
+
+    private void showSuccessMessage(){
+
+        Toast.makeText(this,getString(R.string.login_success),Toast.LENGTH_LONG)
+                .show();
+        Log.i(TAG,getString(R.string.login_success));
+    }
+
 
 
     @Override
     public void onClick(View view) {
+        if(view.getId() == R.id.login_btn){
+            /*
+            if(isValidPassword() && isValidEmail()){
+                showSuccessMessage();
+            }else if (isValidPassword() && !isValidEmail()) {
+                showErrorEmail();
+            }else if (!isValidPassword() && isValidEmail()) {
+                showErrorPassword();
+            }else {
+                showErrorMessage();
+            }*/
 
-
-        //does something
-        if (view.getId() == R.id.login_btn) {
-            if (!isValidEmail()) {
-                showErroMessage(getString(R.string.email_error));
+            if(!isValidEmail()){
+                showErrorMessage(getString(R.string.email_error));
                 return;
             }
-            if (!isValidPassword()) {
-                showErroMessage(getString(R.string.password_error));
+            if(!isValidPassword()){
+                showErrorMessage(getString(R.string.password_error));
                 return;
             }
-            showSuccesMessage();
 
-        } else if (view.getId() == R.id.register_btn) {
-            Intent intent = new Intent(this,RegisterActivity.class);
-            startActivity(intent);
+            showSuccessMessage();
+            Intent i = new Intent(this,WelcomeActivity.class);
+            String mail = emailET.getText().toString();
+            i.putExtra(WELCOME,mail);
+            startActivity(i);
+
+
+        }else if(view.getId() == R.id.register_btn){
+
+            Intent i = new Intent(MainActivity.this,RegisterActivity.class);
+            startActivity(i);
         }
+
     }
 }

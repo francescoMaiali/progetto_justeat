@@ -5,7 +5,7 @@
     <string name="tutto">buono</string>
     <string name="ook">inpadella</string>
     <string name="nono">0</string>
-    <string name="login">LOGIN</string>
+    <string name="login" translatable="false">Login</string>
     <string name="registrati">REGISTRATI</string>
     <string name="login_error">Login error</string>
     <string name="login_success">login avvenuto</string>
@@ -14,4 +14,9 @@
     <string name="email">e-mail</string>
     <string name="password">password</string>
     <string name="phone_number">numero di telefono</string>
+    <string name="register">Registrati</string>
+    <string name="hint_phone">numero telefono</string>
+    <string name="hint_email">email</string>
+    <string name="hint_password">password</string>
+    <string name="welcome">Welcome</string>
 </resources>
