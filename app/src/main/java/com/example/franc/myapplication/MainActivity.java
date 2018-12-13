@@ -1,15 +1,19 @@
 package com.example.franc.myapplication;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private static final String TAG = "MainActivity";
     private static final int PASSWORD_LENGTH = 6;
@@ -20,6 +24,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button loginBtn;
     Button registerBtn;
     public static final String WELCOME ="WELCOME";
+    Switch changecolorSwc;
+    LinearLayout sfondoBg;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +47,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         registerBtn.setOnClickListener(this);
 
         loginBtn.setOnClickListener(this);
+        changecolorSwc = findViewById(R.id.switch_btn);
+         sfondoBg = findViewById(R.id.sfondo_bg);
 
+         changecolorSwc.setOnCheckedChangeListener(this);
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -122,5 +133,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(i);
         }
 
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if(isChecked){
+            sfondoBg.setBackgroundColor(getResources().getColor(R.color.bg_dark));
+
+        }else {
+            sfondoBg.setBackgroundColor(getResources().getColor(R.color.bg_white));
+        }
     }
 }

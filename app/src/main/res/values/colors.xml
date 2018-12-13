@@ -4,5 +4,7 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="ciao">#05ce62</color>
-    <color name="display">#d4d7ed</color>
+    <color name="bg_dark">#ab2653b3</color>
+    <color name="bg_white">#ffff</color>
+
 </resources>
