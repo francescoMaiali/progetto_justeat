@@ -19,4 +19,7 @@
     <string name="hint_email">email</string>
     <string name="hint_password">password</string>
     <string name="welcome">Welcome</string>
+    <string name="buy">buy</string>
+    <string name="euro">euro</string>
+    <string name="total">total</string>
 </resources>
