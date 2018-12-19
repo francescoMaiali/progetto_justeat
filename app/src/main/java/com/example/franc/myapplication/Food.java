@@ -1,37 +1,53 @@
 package com.example.franc.myapplication;
 
-public class Food {
-    private String name;
-    private String prezzo;
-    private String quantita;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-     public Food(String name, String prezzo, String quantita)  {
-         this.name = name;
-         this.prezzo = prezzo;
-         this.quantita = quantita;
-     }
+public class Food  {
+    private String nome;
+    private int quantita = 0;
+    private float prezzo;
 
-    public String getQuantita() {
-        return quantita;
+
+    public Food(String name, float price) {
+
+        nome = name;
+        prezzo = price;
+    }
+
+    public Food(JSONObject jsonFood)throws JSONException{
+        nome = jsonFood.getString("name");
+        prezzo= Float.parseFloat(jsonFood.getString("price"));
+    }
+
+    public void setName(String nome) {
+        this.nome = nome;
     }
 
     public String getName() {
-        return name;
+        return nome;
     }
 
-    public String getPrezzo() {
-        return prezzo;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPrezzo(String prezzo) {
+    public void setPrezzo(float price) {
         this.prezzo = prezzo;
     }
 
-    public void increaseQuantita(String quantita) {
-        this.quantita = quantita;
+    public float getPrezzo() {
+        return prezzo;
     }
+
+
+
+    public int getQuantita() {
+        return quantita;
+    }
+    public void increaseQuantita() {
+        this.quantita++;
+    }
+
+    public void decreaseQuantita() {
+        if(quantita == 0) return;
+        this.quantita--;
+    }
+
 }

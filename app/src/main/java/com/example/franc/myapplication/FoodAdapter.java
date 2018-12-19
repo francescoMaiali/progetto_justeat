@@ -14,7 +14,30 @@ import java.util.ArrayList;
 public class FoodAdapter extends RecyclerView.Adapter {
 
     private LayoutInflater mInflater;
-    private ArrayList<Food> data;
+    private ArrayList<Food> data = new ArrayList<>();
+
+    private OnQuantitaChange onQuantitaChange;
+
+    public void setData(ArrayList<Food> data) {
+        this.data = data;
+        notifyDataSetChanged();
+    }
+
+    public interface OnQuantitaChange {
+        public void onItemAdded(float prezzo);
+
+        public void onItemRemoved(float prezzo);
+
+
+    }
+
+    public void setOnQuantitaChange(OnQuantitaChange onQuantitaChange) {
+        this.onQuantitaChange = onQuantitaChange;
+    }
+
+    public FoodAdapter(Context context) {
+        mInflater = LayoutInflater.from(context);
+    }
 
 
     public FoodAdapter(Context context, ArrayList<Food> data) {
@@ -32,15 +55,28 @@ public class FoodAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         FoodViewHolder foodViewHolder = (FoodViewHolder) viewHolder;
-        foodViewHolder.productName.setText(data.get(i).getName());
-        foodViewHolder.productPrice.setText(data.get(i).getPrezzo());
-        foodViewHolder.productQty.setText(data.get(i).getQuantita());
+        Food currentFood = data.get(i);
+        foodViewHolder.productName.setText(currentFood.getName());
+        foodViewHolder.productPrice.setText(String.valueOf(currentFood.getPrezzo()));
+
+
+        foodViewHolder.productQty.setText(String.valueOf(currentFood.getQuantita()));
     }
 
     @Override
     public int getItemCount() {
         return data.size();
     }
+
+    private void addItem() {
+
+    }
+
+    private void removeItem() {
+
+
+    }
+
 
     public class FoodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -59,28 +95,28 @@ public class FoodAdapter extends RecyclerView.Adapter {
 
         }
 
-        public void addOne(TextView itemTotal) {
-            int item = Integer.valueOf(itemTotal.getText().toString());
-            item += 1;
-            itemTotal.setText(String.valueOf(item));
-        }
-
-        public void removeOne(TextView itemTotal) {
-            int item = Integer.valueOf(itemTotal.getText().toString());
-            if (item > 0) {
-                item -= 1;
-                itemTotal.setText(String.valueOf(item));
-            }
-        }
-
         @Override
         public void onClick(View view) {
+
             if (view.getId() == R.id.plus_btn) {
+                Food food = data.get(getAdapterPosition());
+                food.increaseQuantita();
+                notifyItemChanged(getAdapterPosition());
+
+                onQuantitaChange.onItemAdded(food.getPrezzo());
 
 
-                addOne(productQty);
-            } else if (view.getId() == R.id.minus_btn){
-                removeOne(productQty);
+            } else if (view.getId() == R.id.minus_btn) {
+                Food food = data.get(getAdapterPosition());
+                Integer itemNum = food.getQuantita();
+                if (itemNum > 0) {
+                    food.decreaseQuantita();
+                    notifyItemChanged(getAdapterPosition());
+
+                    onQuantitaChange.onItemRemoved(food.getPrezzo());
+
+
+                }
             }
         }
     }

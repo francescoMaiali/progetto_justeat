@@ -7,15 +7,34 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 
-public class WelcomeActivity extends AppCompatActivity implements View.OnClickListener {
+public class WelcomeActivity extends AppCompatActivity implements FoodAdapter.OnQuantitaChange, View.OnClickListener {
     RecyclerView recyclerView;
+
+     TextView totaleTextView;
+     String mail;
+     String eseguimail;
+
+    int totale = 0;
 
     LinearLayoutManager layoutManager;
     FoodAdapter adapter;
@@ -25,41 +44,110 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         setContentView(R.layout.activity_welcome);
-
-        TextView welcomeTW= findViewById(R.id.welcome_tv);
-
-        welcomeTW.setOnClickListener(this);
-
-        String mail= getIntent().getStringExtra(MainActivity.WELCOME);
-
-        welcomeTW.setText(getString(R.string.welcome)+" "+mail);
-
-        recyclerView = findViewById(R.id.food_rv);
-
+        totaleTextView = findViewById(R.id.total_shop);
         layoutManager = new LinearLayoutManager(this);
-
-        ArrayList<Food> foodList = new ArrayList<>();
-
-        foodList.add(new Food("Milk", "1.00€", "0"));
-        foodList.add(new Food("bread", "1.00€", "0"));
-        foodList.add(new Food("eggs", "1.00€", "0"));
-        foodList.add(new Food("juice", "1.00€", "0"));
-        foodList.add(new Food("cream", "1.00€", "0"));
-
-
-        adapter = new FoodAdapter(this,foodList);
-
+        adapter = new FoodAdapter(this, foodArrayList);
+        adapter.setOnQuantitaChange(this);
+        recyclerView = findViewById(R.id.food_rv);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+
+        TextView mail_passata = findViewById(R.id.welcome_tv);
+
+
+
+        mail = getIntent().getStringExtra("WELCOME");
+        mail_passata.setOnClickListener(this);
+
+        getProducts();
+
+
+
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        if (intent.getData() != null) {
+            eseguimail = Uri.decode(intent.getData().toString().substring(7));
+
+            mail_passata.setText(eseguimail);
+        }else mail_passata.setText(mail);
+
+
     }
+
+    ArrayList<Food> foodArrayList = new ArrayList<>();
+
+
+        private void getProducts() {
+// Instantiate the RequestQueue.
+            RequestQueue queue = Volley.newRequestQueue(this);
+            String url = "https://5ba19290ee710f0014dd764c.mockapi.io/Food";
+
+// Request a string response from the provided URL.
+            StringRequest stringRequest = new StringRequest(
+                    Request.Method.GET,
+                    url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            Log.d("Success", response);
+                            try {
+                                JSONObject responseJSON = new JSONObject(response);
+                                JSONArray jsonArray = responseJSON.getJSONArray("foods");
+
+
+
+                                for (int i =0; i<jsonArray.length(); i++) {
+
+                                    Food food = new Food(jsonArray.getJSONObject(i));
+                                    foodArrayList.add(food);
+                                }
+                                adapter.setData(foodArrayList);
+
+                                // Display the first 500 characters of the response string.
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("Error", error.getMessage());
+
+                        }
+                    });
+            queue.add(stringRequest);
+
+        }
+
+
+
     public void onClick(View view) {
         if (view.getId() == R.id.welcome_tv) {
             Intent i = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                     "mailto", getIntent().getStringExtra("WELCOME"), null));
             startActivity(Intent.createChooser(i, "scegli un email client:"));
         }
+
+    }
+    @Override
+    public void onItemAdded(float price) {
+
+        totale+= price;
+        totaleTextView.setText("Total :" + totale);
+
+
+
+    }
+
+    @Override
+    public void onItemRemoved(float price) {
+        if(totale == 0) return;
+        totale -= price;
+        totaleTextView.setText("Totale :" + totale);
 
     }
 }
