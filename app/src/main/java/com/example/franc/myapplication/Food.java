@@ -7,6 +7,13 @@ public class Food  {
     private String nome;
     private int quantita = 0;
     private float prezzo;
+    private boolean disponibilita;
+
+
+    public boolean isDisponibilita() {
+        return disponibilita;
+    }
+
 
 
     public Food(String name, float price) {
@@ -18,6 +25,7 @@ public class Food  {
     public Food(JSONObject jsonFood)throws JSONException{
         nome = jsonFood.getString("name");
         prezzo= Float.parseFloat(jsonFood.getString("price"));
+        disponibilita = jsonFood.getBoolean("available");
     }
 
     public void setName(String nome) {

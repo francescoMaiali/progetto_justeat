@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -35,6 +36,7 @@ public class WelcomeActivity extends AppCompatActivity implements FoodAdapter.On
      TextView totaleTextView;
      String mail;
      String eseguimail;
+
 
     int totale = 0;
 
@@ -59,6 +61,7 @@ public class WelcomeActivity extends AppCompatActivity implements FoodAdapter.On
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         btn =findViewById(R.id.buy_btn);
+
 
 
         TextView mail_passata = findViewById(R.id.welcome_tv);
@@ -102,15 +105,17 @@ public class WelcomeActivity extends AppCompatActivity implements FoodAdapter.On
                         public void onResponse(String response) {
                             Log.d("Success", response);
                             try {
-                                JSONObject responseJSON = new JSONObject(response);
-                                JSONArray jsonArray = responseJSON.getJSONArray("foods");
+                                JSONArray responseJSON = new JSONArray(response);
+                                ArrayList<Food> foodArrayList = new ArrayList<>();
 
 
+                                for (int i =0; i<responseJSON.length(); i++) {
 
-                                for (int i =0; i<jsonArray.length(); i++) {
+                                    Food food = new Food(responseJSON.getJSONObject(i));
+                                    if(food.isDisponibilita()){
+                                        foodArrayList.add(food);
 
-                                    Food food = new Food(jsonArray.getJSONObject(i));
-                                    foodArrayList.add(food);
+                                    }
                                 }
                                 adapter.setData(foodArrayList);
 
@@ -133,6 +138,8 @@ public class WelcomeActivity extends AppCompatActivity implements FoodAdapter.On
 
 
 
+
+
     public void onClick(View view) {
         if (view.getId() == R.id.welcome_tv) {
             Intent i = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
@@ -148,7 +155,7 @@ public class WelcomeActivity extends AppCompatActivity implements FoodAdapter.On
         totaleTextView.setText("Total :" + totale);
 
 
-        //Button btn =findViewById(R.id.buy_btn);
+        //utton btn =findViewById(R.id.buy_btn);
         if(totale>=5)
             btn.setEnabled(true);
 
