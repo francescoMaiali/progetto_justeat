@@ -9,7 +9,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -36,13 +38,17 @@ public class WelcomeActivity extends AppCompatActivity implements FoodAdapter.On
 
     int totale = 0;
 
+    ProgressBar progressBar;
     LinearLayoutManager layoutManager;
     FoodAdapter adapter;
+    Button btn;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
 
         setContentView(R.layout.activity_welcome);
         totaleTextView = findViewById(R.id.total_shop);
@@ -52,6 +58,8 @@ public class WelcomeActivity extends AppCompatActivity implements FoodAdapter.On
         recyclerView = findViewById(R.id.food_rv);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+        btn =findViewById(R.id.buy_btn);
+
 
         TextView mail_passata = findViewById(R.id.welcome_tv);
 
@@ -140,6 +148,17 @@ public class WelcomeActivity extends AppCompatActivity implements FoodAdapter.On
         totaleTextView.setText("Total :" + totale);
 
 
+        //Button btn =findViewById(R.id.buy_btn);
+        if(totale>=5)
+            btn.setEnabled(true);
+
+
+        progressBar = findViewById(R.id.determinateBar);
+        progressBar.setMax(5);
+        progressBar.setProgress(0);
+        progressBar.setProgress(totale);
+
+
 
     }
 
@@ -148,6 +167,17 @@ public class WelcomeActivity extends AppCompatActivity implements FoodAdapter.On
         if(totale == 0) return;
         totale -= price;
         totaleTextView.setText("Totale :" + totale);
+
+
+        //Button btn =findViewById(R.id.buy_btn);
+        if(totale<5)
+        btn.setEnabled(false);
+
+        progressBar = findViewById(R.id.determinateBar);
+        progressBar.setMax(5);
+        progressBar.setProgress(0);
+        progressBar.setProgress(totale);
+
 
     }
 }
